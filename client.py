@@ -1,21 +1,19 @@
 import socket
-import threading
 
+# Create a socket
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+# Connect to the server
+client.connect(('127.0.0.1', 12345))
 
+while True:
+    # Send a message to the server
+    message = input("Enter your message: ")
+    client.send(message.encode('utf-8'))
 
-ip = 'IP ADRESS'
-port = 'PORT'
-LISTENER_LIMIT = 5
+    # Receive a message from the server
+    message = client.recv(1024).decode('utf-8')
+    print(f"Received message: {message}")
 
-def main():
-
-    client= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    try:
-        client.connect((ip, port))
-    except:
-        print(f"Unable to connect server {ip}:{port}")
-
-if __name__ == '__main__':
-    main()
+# Close the connection
+client.close()
