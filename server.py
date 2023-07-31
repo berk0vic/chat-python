@@ -1,28 +1,31 @@
 import socket
-import threading
 
+# Create a socket
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-#port and ips
+# Bind the socket to an address and port
+server.bind(('127.0.0.1', 31))
 
-ip = 'IP ADRESS'
-port = 'PORT'
-LISTENER_LIMIT = 5
-#main
-def main():
+# Listen for incoming connections
+server.listen()
 
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+print("Server started and is listening for connections...")
 
-    try:
-        server.bind((ip, port))
-    except:
-        print(f"Unable to connect host {ip}:{port}")
+# Accept a connection
+client_socket, addr = server.accept()
 
-    while True:
+print(f"Connected with {addr}")
 
-        client, adress = server.accept()
-        print(f"Server succesfully conecting and starting...")
-        print(f"Connected {adress[0]}:{adress[1]}")
+while True:
+    # Receive a message from the client
+    message = client_socket.recv(1024).decode('utf-8')
+    print("Server successfully started..")
+    if not message:
+        break
+    print(f"Received message: {message}")
 
-if __name__ == '__main__':
+    # Send a message to the client
+    message = input("Enter your message: ")
+    client_socket.send(message.encode('utf-8'))
 
-    main()
+server.close()
